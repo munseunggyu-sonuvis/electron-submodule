@@ -3,6 +3,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { getPort } from "get-port-please";
 import { startServer } from "next/dist/server/lib/start-server";
 import { join } from "path";
+import { startExpressServer } from "../../back/src/index";
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -18,10 +19,12 @@ const createWindow = () => {
 
   const loadURL = async () => {
     if (is.dev) {
+      startExpressServer();
       mainWindow.loadURL("http://localhost:3000");
     } else {
       try {
         const port = await startNextJSServer();
+        startExpressServer();
         console.log("Next.js server started on port:", port);
         mainWindow.loadURL(`http://localhost:${port}`);
       } catch (error) {
