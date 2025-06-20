@@ -4,6 +4,8 @@ import { getPort } from "get-port-please";
 import { startServer } from "next/dist/server/lib/start-server";
 import { join } from "path";
 import { startExpressServer } from "../../back/src/index";
+import { captureScreen } from "../lib";
+import { CaptureScreen } from "../../shared/types";
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -63,7 +65,10 @@ const startNextJSServer = async () => {
 app.whenReady().then(() => {
   createWindow();
 
-  ipcMain.on("ping", () => console.log("pong"));
+  ipcMain.handle("capture-screen", (_, ...args: Parameters<CaptureScreen>) =>
+    captureScreen(...args)
+  );
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

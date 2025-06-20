@@ -8,4 +8,6 @@ contextBridge.exposeInMainWorld("electron", {
       listener: (event: unknown, ...args: unknown[]) => void
     ) => ipcRenderer.on(channel, listener),
   },
+  // 스크린샷 캡처 API
+  captureScreen: (msg: string) => ipcRenderer.invoke("capture-screen", msg),
 });
