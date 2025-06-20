@@ -6,6 +6,7 @@ import { join } from "path";
 import { startExpressServer } from "../../back/src/index";
 import { captureScreen } from "../lib";
 import { CaptureScreen } from "../../shared/types";
+import Logger = require("electron-log");
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -23,11 +24,12 @@ const createWindow = () => {
     if (is.dev) {
       startExpressServer();
       mainWindow.loadURL("http://localhost:3000");
+      Logger.info("Next.js server started on port:", 3000);
     } else {
       try {
         const port = await startNextJSServer();
         startExpressServer();
-        console.log("Next.js server started on port:", port);
+        Logger.info("Next.js server started on port:", port);
         mainWindow.loadURL(`http://localhost:${port}`);
       } catch (error) {
         console.error("Error starting Next.js server:", error);
